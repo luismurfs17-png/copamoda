@@ -1,30 +1,32 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import InputNumber from "../components/InputNumber";
 import { useMeasurements } from "../hooks/useMeasurements";
 import { apiError } from "../services/api";
-const configured = (() => {
-  try {
-    return JSON.parse(import.meta.env.VITE_MEASUREMENT_DEFINITIONS || "[]");
-  } catch {
-    return [];
-  }
-})();
+
+const uuidPattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[45][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export default function MeasurementForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const validClientId = uuidPattern.test(id || "");
   const [scope, setScope] = useState("superior");
   const [values, setValues] = useState({});
-  const { definitions, saveMeasurement } = useMeasurements(id);
+  const { definitions, saveMeasurement } = useMeasurements(
+    validClientId ? id : null,
+  );
   const fields = useMemo(() => {
-    const source = definitions.length ? definitions : configured;
-    return source
+    return definitions
       .filter((d) => d.scope === scope)
       .sort((a, b) => a.display_order - b.display_order);
   }, [definitions, scope]);
+
+  if (!validClientId) return <Navigate to="/medidas" replace />;
+
   async function submit(e) {
     e.preventDefault();
     if (!fields.length || fields.some((f) => !values[f.id]))
@@ -87,8 +89,7 @@ export default function MeasurementForm() {
           ))}
           {!fields.length && (
             <p className="rounded-xl bg-warning/15 p-4 text-sm text-neutral sm:col-span-2">
-              No hay definiciones disponibles. Añádelas en
-              `VITE_MEASUREMENT_DEFINITIONS`.
+              No se pudieron cargar las definiciones de medidas.
             </p>
           )}
           <div className="sticky bottom-20 -mx-5 mt-2 bg-white/95 p-1 backdrop-blur sm:col-span-2">

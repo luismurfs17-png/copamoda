@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Clients from "../screens/Clients";
 import ClientDetail from "../screens/ClientDetail";
+import Measurements from "../screens/Measurements";
 import MeasurementForm from "../screens/MeasurementForm";
 import OrderForm from "../screens/OrderForm";
 import OrderDetail from "../screens/OrderDetail";
@@ -21,6 +22,7 @@ export default function AppRoutes() {
         <Routes location={location}>
           <Route path="/" element={<Clients />} />
           <Route path="/clientes/:id" element={<ClientDetail />} />
+          <Route path="/medidas" element={<Measurements />} />
           <Route
             path="/clientes/:id/medidas/nueva"
             element={<MeasurementForm />}

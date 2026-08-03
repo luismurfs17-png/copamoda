@@ -44,9 +44,14 @@ test("GET /clientes lista clientes", async () => {
 });
 
 test("POST y GET /measurements gestionan medidas", async () => {
-  const definition = await db("measurement_definitions")
-    .where({ scope: "superior" })
-    .first();
+  const initial = await request(app).get(`/measurements/${clientId}`);
+  expect(initial.status).toBe(200);
+  expect(initial.body.data.records).toEqual([]);
+  expect(initial.body.data.definitions.length).toBeGreaterThan(0);
+
+  const definition = initial.body.data.definitions.find(
+    ({ scope }) => scope === "superior",
+  );
   const create = await request(app)
     .post("/measurements")
     .send({

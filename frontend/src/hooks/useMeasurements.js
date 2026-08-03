@@ -12,13 +12,7 @@ export function useMeasurements(clientId) {
     try {
       const result = await request("get", `/measurements/${clientId}`);
       const records = result?.records || [];
-      const definitions = [
-        ...new Map(
-          records
-            .flatMap((r) => r.values || [])
-            .map((v) => [v.definition_id, v]),
-        ).values(),
-      ];
+      const definitions = result?.definitions || [];
       setData({ ...result, records, definitions });
     } catch (e) {
       toast.error(apiError(e));

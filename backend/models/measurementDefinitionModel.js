@@ -8,6 +8,16 @@ async function findDefinitionsByIds(trx, ids) {
     ]);
 }
 
+async function findAllDefinitions(trx) {
+  return trx("measurement_definitions")
+    .select("id", "name", "abbreviation", "display_order", "scope")
+    .orderBy([
+      { column: "scope", order: "asc" },
+      { column: "display_order", order: "asc" },
+    ]);
+}
+
 module.exports = {
+  findAllDefinitions,
   findDefinitionsByIds,
 };

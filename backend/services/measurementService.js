@@ -137,12 +137,13 @@ async function getMeasurementsByClient(clienteId) {
     throw new AppError("Cliente no encontrado", 404);
   }
 
-  const rows = await measurementModel.findMeasurementRowsByClient(
-    db,
-    clienteId,
-  );
+  const [rows, definitions] = await Promise.all([
+    measurementModel.findMeasurementRowsByClient(db, clienteId),
+    measurementDefinitionModel.findAllDefinitions(db),
+  ]);
   return {
     client,
+    definitions,
     records: groupMeasurementRows(rows),
   };
 }
