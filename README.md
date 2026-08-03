@@ -2,6 +2,8 @@
 
 PWA para gestionar clientes, medidas históricas, pedidos y abonos de un taller de confección. El monorepo contiene un backend Express/Knex y un frontend React/Vite/Tailwind.
 
+Manual completo de despliegue, operación, límites y adaptación: [`DEPLOYMENT_RUNBOOK.md`](./DEPLOYMENT_RUNBOOK.md).
+
 ## Enlaces locales
 
 - **Frontend local:** <http://localhost:5173>
