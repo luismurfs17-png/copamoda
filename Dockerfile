@@ -23,6 +23,8 @@ WORKDIR /app
 ENV NODE_ENV=development
 
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/node_modules ./backend/node_modules
+COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
 COPY . .
 
 ARG VITE_API_URL=/api
@@ -40,6 +42,7 @@ ENV PORT=3000
 COPY package*.json ./
 COPY backend/package*.json backend/
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/node_modules ./backend/node_modules
 COPY --from=build /app/backend ./backend
 
 VOLUME ["/app/backend/data"]
