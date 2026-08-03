@@ -2,6 +2,8 @@ FROM node:18-bookworm-slim AS deps
 
 WORKDIR /app
 
+ENV NODE_ENV=development
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends python3 make g++ \
   && rm -rf /var/lib/apt/lists/*
@@ -17,6 +19,8 @@ RUN npm ci --include=dev
 FROM node:18-bookworm-slim AS build
 
 WORKDIR /app
+
+ENV NODE_ENV=development
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
