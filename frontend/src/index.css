@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: Poppins, sans-serif;
+    color: #2e2e2e;
+    background: #fff;
+  }
+  body {
+    @apply m-0 bg-bg text-neutral antialiased;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    @apply font-poppins;
+  }
+}
+
+@layer components {
+  .touch-button {
+    @apply min-h-12 rounded-xl px-5 py-3 font-semibold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .surface-card {
+    @apply rounded-2xl border border-neutral/10 bg-white p-5 shadow-soft;
+  }
+  .field-tailwind {
+    @apply grid gap-2 text-sm font-semibold text-neutral;
+  }
+  .field-tailwind input,
+  .field-tailwind select,
+  .field-tailwind textarea {
+    @apply w-full rounded-xl border border-neutral/15 bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10;
+  }
+}

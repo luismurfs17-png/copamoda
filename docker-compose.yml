@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+    image: copamoda:latest
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3000}
+      API_PREFIX: /api
+      DB_CLIENT: ${DB_CLIENT:-sqlite3}
+      SQLITE_FILENAME: ${SQLITE_FILENAME:-/app/backend/data/copamoda.sqlite3}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - copamoda_data:/app/backend/data
+    restart: unless-stopped
+
+volumes:
+  copamoda_data:

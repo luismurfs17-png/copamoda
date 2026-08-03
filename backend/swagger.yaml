@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: Copamoda API
+  version: 1.0.0
+  description: API para clientes, medidas, pedidos y pagos de confección.
+servers:
+  - url: http://localhost:3000/api
+tags:
+  - name: Clientes
+  - name: Medidas
+  - name: Pedidos
+  - name: Pagos
+paths:
+  /health:
+    get:
+      summary: Estado de la API
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+  /clientes:
+    post:
+      tags: [Clientes]
+      summary: Crear cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ClientInput" }
+      responses:
+        "201": { $ref: "#/components/responses/Success" }
+        "400": { $ref: "#/components/responses/Error" }
+    get:
+      tags: [Clientes]
+      summary: Listar clientes
+      parameters:
+        - { name: includeArchived, in: query, schema: { type: boolean } }
+        - { name: q, in: query, schema: { type: string } }
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+  /clientes/{id}:
+    put:
+      tags: [Clientes]
+      summary: Actualizar datos de cliente
+      parameters: [{ $ref: "#/components/parameters/id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ClientUpdate" }
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+        "404": { $ref: "#/components/responses/Error" }
+  /clientes/{id}/archive:
+    patch:
+      tags: [Clientes]
+      summary: Archivar cliente sin borrarlo
+      parameters: [{ $ref: "#/components/parameters/id" }]
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+  /measurements:
+    post:
+      tags: [Medidas]
+      summary: Crear registro histórico de medidas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MeasurementInput" }
+      responses:
+        "201": { $ref: "#/components/responses/Success" }
+        "400": { $ref: "#/components/responses/Error" }
+  /measurements/{clienteId}:
+    get:
+      tags: [Medidas]
+      summary: Obtener historial de medidas de un cliente
+      parameters: [{ $ref: "#/components/parameters/clienteId" }]
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+  /orders:
+    post:
+      tags: [Pedidos]
+      summary: Crear pedido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OrderInput" }
+      responses:
+        "201": { $ref: "#/components/responses/Success" }
+        "400": { $ref: "#/components/responses/Error" }
+    get:
+      tags: [Pedidos]
+      summary: Listar pedidos
+      parameters:
+        - {
+            name: estado,
+            in: query,
+            schema:
+              {
+                type: string,
+                enum: [pendiente, proceso, terminado, entregado],
+              },
+          }
+        - { name: clienteId, in: query, schema: { type: string, format: uuid } }
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+  /orders/{id}:
+    put:
+      tags: [Pedidos]
+      summary: Actualizar estado del pedido
+      parameters: [{ $ref: "#/components/parameters/id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estado]
+              properties:
+                estado:
+                  {
+                    type: string,
+                    enum: [pendiente, proceso, terminado, entregado],
+                  }
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+  /payments:
+    post:
+      tags: [Pagos]
+      summary: Registrar abono
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "201": { $ref: "#/components/responses/Success" }
+        "400": { $ref: "#/components/responses/Error" }
+  /payments/{orderId}:
+    get:
+      tags: [Pagos]
+      summary: Obtener pagos y saldo del pedido
+      parameters: [{ $ref: "#/components/parameters/orderId" }]
+      responses:
+        "200": { $ref: "#/components/responses/Success" }
+components:
+  parameters:
+    id:
+      {
+        name: id,
+        in: path,
+        required: true,
+        schema: { type: string, format: uuid },
+      }
+    clienteId:
+      {
+        name: clienteId,
+        in: path,
+        required: true,
+        schema: { type: string, format: uuid },
+      }
+    orderId:
+      {
+        name: orderId,
+        in: path,
+        required: true,
+        schema: { type: string, format: uuid },
+      }
+  schemas:
+    ClientInput:
+      type: object
+      required: [nombre, telefono]
+      properties:
+        id: { type: string, format: uuid }
+        nombre: { type: string, example: Ana Perez }
+        telefono: { type: string, example: "5551234567" }
+        direccion: { type: string, nullable: true }
+    ClientUpdate:
+      allOf: [{ $ref: "#/components/schemas/ClientInput" }]
+    MeasurementInput:
+      type: object
+      required: [cliente_id, scope, values]
+      properties:
+        id: { type: string, format: uuid }
+        cliente_id: { type: string, format: uuid }
+        fecha: { type: string, format: date-time }
+        scope: { type: string, enum: [superior, inferior] }
+        values:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [definition_id, value]
+            properties:
+              id: { type: string, format: uuid }
+              definition_id: { type: string, format: uuid }
+              value: { type: number, format: double, exclusiveMinimum: 0 }
+    OrderInput:
+      type: object
+      required: [cliente_id, tipo_prenda, precio_total]
+      properties:
+        id: { type: string, format: uuid }
+        cliente_id: { type: string, format: uuid }
+        tipo_prenda: { type: string, example: Vestido }
+        descripcion: { type: string, nullable: true }
+        fecha_entrega: { type: string, format: date-time }
+        precio_total: { type: number, format: double, minimum: 0 }
+    PaymentInput:
+      type: object
+      required: [order_id, monto, metodo]
+      properties:
+        id: { type: string, format: uuid }
+        order_id: { type: string, format: uuid }
+        fecha: { type: string, format: date-time }
+        monto: { type: number, format: double, exclusiveMinimum: 0 }
+        metodo: { type: string, example: efectivo }
+    ApiResponse:
+      type: object
+      required: [success, message, data]
+      properties:
+        success: { type: boolean }
+        message: { type: string }
+        data: { nullable: true }
+    ErrorResponse:
+      allOf: [{ $ref: "#/components/schemas/ApiResponse" }]
+  responses:
+    Success:
+      description: Operación exitosa
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ApiResponse" }
+    Error:
+      description: Error de la API
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
