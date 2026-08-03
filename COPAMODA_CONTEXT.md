@@ -15,7 +15,7 @@ Está pensada para uso mobile-first, con soporte offline y sincronización al re
 
 ## Stack
 
-- Backend: Node 18, Express 4, Knex, SQLite por defecto, MySQL opcional
+- Backend: Node 22, Express 4, Knex, SQLite por defecto, MySQL opcional
 - Frontend: React 18, Vite, Tailwind CSS, React Router 6
 - UI: Lucide-React, Framer Motion, react-toastify
 - PWA: manifest + service worker + Workbox

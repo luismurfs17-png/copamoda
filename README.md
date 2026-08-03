@@ -12,7 +12,7 @@ Manual completo de despliegue, operación, límites y adaptación: [`DEPLOYMENT_
 
 ## Requisitos
 
-Node.js 18 o superior. SQLite es la base de datos por defecto; MySQL se puede activar con las variables `MYSQL_*`.
+Node.js 22 o superior. SQLite es la base de datos por defecto; MySQL se puede activar con las variables `MYSQL_*`.
 
 ## Desarrollo
 
@@ -50,7 +50,7 @@ npm run build
 
 ## Despliegue en Hostinger
 
-1. Ejecuta `npm ci` y `npm run build` en un entorno Node 18.
+1. Ejecuta `npm ci` y `npm run build` en un entorno Node 22.
 2. Configura el proceso Node para ejecutar `npm start --workspace backend` y define `NODE_ENV=production`.
 3. Configura las variables de base de datos y `PORT` en el panel de Hostinger.
 4. Apunta el dominio al proceso Node. Express servirá la SPA y sus assets desde `backend/public`.

@@ -1,6 +1,7 @@
 {
   "name": "copamoda",
   "private": true,
+  "engines": { "node": ">=22" },
   "workspaces": ["backend", "frontend"],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",

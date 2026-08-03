@@ -1,4 +1,4 @@
-FROM node:18-bookworm-slim AS deps
+FROM node:22-bookworm-slim AS deps
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY frontend/package*.json frontend/
 RUN npm ci --include=dev \
   && npm ci --prefix frontend --include=dev --include=optional
 
-FROM node:18-bookworm-slim AS build
+FROM node:22-bookworm-slim AS build
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ ENV VITE_API_URL=${VITE_API_URL}
 
 RUN npm run build --workspace frontend
 
-FROM node:18-bookworm-slim AS production
+FROM node:22-bookworm-slim AS production
 
 WORKDIR /app
 

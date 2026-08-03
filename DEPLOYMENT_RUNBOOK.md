@@ -19,6 +19,7 @@ production_branch: main
 hosting: Hostinger VPS
 deployment_platform: Dokploy
 build_type: Dockerfile
+node_runtime: 22
 database: SQLite
 docker_volume: copamoda_data
 data_mount: /app/backend/data
@@ -117,7 +118,7 @@ Pendiente antes de considerarla una aplicación completa de producción:
 ## 5. Requisitos de desarrollo
 
 - Git.
-- Node.js 18 o superior.
+- Node.js 22 o superior.
 - npm.
 - Docker y Docker Compose para validar la imagen completa.
 - Acceso autorizado a GitHub.
