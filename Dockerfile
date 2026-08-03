@@ -12,9 +12,10 @@ COPY package*.json ./
 COPY backend/package*.json backend/
 COPY frontend/package*.json frontend/
 
-# Vite y las demas herramientas de compilacion son devDependencies.
-# Deben instalarse aunque el despliegue final use NODE_ENV=production.
-RUN npm ci --include=dev
+# Vite necesita devDependencies y Rollup necesita su binario opcional para Linux.
+# El lockfile del frontend contiene todas las variantes de plataforma.
+RUN npm ci --include=dev \
+  && npm ci --prefix frontend --include=dev --include=optional
 
 FROM node:18-bookworm-slim AS build
 
