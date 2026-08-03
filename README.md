@@ -4,6 +4,8 @@ PWA para gestionar clientes, medidas históricas, pedidos y abonos de un taller 
 
 Manual completo de despliegue, operación, límites y adaptación: [`DEPLOYMENT_RUNBOOK.md`](./DEPLOYMENT_RUNBOOK.md).
 
+Skill portable para OpenCode: [`.opencode/skills/deploy-dokploy-docker`](./.opencode/skills/deploy-dokploy-docker/).
+
 ## Enlaces locales
 
 - **Frontend local:** <http://localhost:5173>
