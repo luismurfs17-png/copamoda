@@ -10,7 +10,7 @@ export function useClients(query = "") {
     try {
       setClients(
         (await request("get", "/clientes", undefined, {
-          params: { q: query, includeArchived: false },
+          params: { q: query.trim() || undefined, includeArchived: false },
         })) || [],
       );
     } catch (e) {
